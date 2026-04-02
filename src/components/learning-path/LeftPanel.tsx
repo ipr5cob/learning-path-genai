@@ -3,6 +3,20 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BookOpen, Clock, Trash2 } from 'lucide-react';
+
+interface SavedPath {
+  id: string;
+  title: string;
+  date: string;
+  modules: number;
+}
+
+const mockSavedPaths: SavedPath[] = [
+  { id: '1', title: 'Azure DevOps – Advanced', date: '2026-04-01', modules: 7 },
+  { id: '2', title: 'Kubernetes Fundamentals', date: '2026-03-28', modules: 5 },
+  { id: '3', title: 'React & TypeScript', date: '2026-03-25', modules: 6 },
+];
 
 const LeftPanel = () => {
   const [maxDuration, setMaxDuration] = useState([20]);
@@ -12,10 +26,58 @@ const LeftPanel = () => {
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
   const [pathStrategy, setPathStrategy] = useState('balanced');
+  const [savedPaths, setSavedPaths] = useState<SavedPath[]>(mockSavedPaths);
+
+  const handleDelete = (id: string) => {
+    setSavedPaths((prev) => prev.filter((p) => p.id !== id));
+  };
 
   return (
     <aside className="w-full h-full bg-base-minor overflow-y-auto custom-scrollbar p-4 space-y-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-base-muted mb-3">Controls & Constraints</h2>
+      {/* Saved Learning Paths */}
+      <div>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-base-muted mb-3">Saved Learning Paths</h2>
+        <div className="space-y-2">
+          {savedPaths.length === 0 ? (
+            <div className="bg-plain-white rounded border border-base-pure p-3 text-center">
+              <BookOpen className="h-5 w-5 text-base-pure mx-auto mb-1.5" />
+              <p className="text-xs text-base-muted">No saved paths yet</p>
+            </div>
+          ) : (
+            savedPaths.map((path) => (
+              <button
+                key={path.id}
+                className="w-full text-left bg-plain-white rounded border border-base-pure p-2.5 hover:border-accent-pure transition-colors group"
+              >
+                <div className="flex items-start justify-between gap-1">
+                  <span className="text-xs font-medium text-base-text leading-tight">{path.title}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(path.id);
+                    }}
+                    className="p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-signal-error-light text-base-muted hover:text-signal-error transition-all"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-2 mt-1 text-[10px] text-base-muted">
+                  <span className="flex items-center gap-0.5">
+                    <Clock className="h-2.5 w-2.5" />
+                    {path.date}
+                  </span>
+                  <span>{path.modules} modules</span>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-base-pure" />
+
+      <h2 className="text-xs font-semibold uppercase tracking-wider text-base-muted">Controls & Constraints</h2>
 
       {/* Constraints */}
       <div className="bg-plain-white rounded border border-base-pure p-3 space-y-3">

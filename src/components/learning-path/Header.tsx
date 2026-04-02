@@ -4,6 +4,7 @@ import thubLogo from '@/assets/thub-logo.png';
 
 interface HeaderProps {
   onSave: () => void;
+  onExport: () => void;
   hasMessages: boolean;
 }
 

@@ -2,7 +2,12 @@ import { Download, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import thubLogo from '@/assets/thub-logo.png';
 
-const Header = () => {
+interface HeaderProps {
+  onSave: () => void;
+  hasMessages: boolean;
+}
+
+const Header = ({ onSave, hasMessages }: HeaderProps) => {
   return (
     <header className="bg-plain-white border-b border-base-pure px-6 py-3">
       <div className="flex items-center justify-between">
@@ -14,7 +19,13 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="text-xs border-base-pure text-base-muted hover:bg-base-minor">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSave}
+            disabled={!hasMessages}
+            className="text-xs border-base-pure text-base-muted hover:bg-base-minor disabled:opacity-40"
+          >
             <Save className="h-3.5 w-3.5 mr-1.5" />
             Save
           </Button>

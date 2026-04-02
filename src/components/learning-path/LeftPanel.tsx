@@ -4,21 +4,15 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookOpen, Clock, Trash2 } from 'lucide-react';
+import type { SavedPath } from './types';
 
-interface SavedPath {
-  id: string;
-  title: string;
-  date: string;
-  modules: number;
+interface LeftPanelProps {
+  savedPaths: SavedPath[];
+  onDeletePath: (id: string) => void;
+  onLoadPath: (id: string) => void;
 }
 
-const mockSavedPaths: SavedPath[] = [
-  { id: '1', title: 'Azure DevOps – Advanced', date: '2026-04-01', modules: 7 },
-  { id: '2', title: 'Kubernetes Fundamentals', date: '2026-03-28', modules: 5 },
-  { id: '3', title: 'React & TypeScript', date: '2026-03-25', modules: 6 },
-];
-
-const LeftPanel = () => {
+const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath }: LeftPanelProps) => {
   const [maxDuration, setMaxDuration] = useState([20]);
   const [modality, setModality] = useState('Self-paced');
   const [language, setLanguage] = useState('English');
@@ -26,11 +20,6 @@ const LeftPanel = () => {
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
   const [pathStrategy, setPathStrategy] = useState('balanced');
-  const [savedPaths, setSavedPaths] = useState<SavedPath[]>(mockSavedPaths);
-
-  const handleDelete = (id: string) => {
-    setSavedPaths((prev) => prev.filter((p) => p.id !== id));
-  };
 
   return (
     <aside className="w-full h-full bg-base-minor overflow-y-auto custom-scrollbar p-4 space-y-4">
@@ -47,6 +36,7 @@ const LeftPanel = () => {
             savedPaths.map((path) => (
               <button
                 key={path.id}
+                onClick={() => onLoadPath(path.id)}
                 className="w-full text-left bg-plain-white rounded border border-base-pure p-2.5 hover:border-accent-pure transition-colors group"
               >
                 <div className="flex items-start justify-between gap-1">
@@ -54,7 +44,7 @@ const LeftPanel = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDelete(path.id);
+                      onDeletePath(path.id);
                     }}
                     className="p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-signal-error-light text-base-muted hover:text-signal-error transition-all"
                   >
@@ -66,7 +56,7 @@ const LeftPanel = () => {
                     <Clock className="h-2.5 w-2.5" />
                     {path.date}
                   </span>
-                  <span>{path.modules} modules</span>
+                  <span>{path.messages.length} messages</span>
                 </div>
               </button>
             ))
@@ -74,9 +64,7 @@ const LeftPanel = () => {
         </div>
       </div>
 
-      {/* Divider */}
       <div className="border-t border-base-pure" />
-
       <h2 className="text-xs font-semibold uppercase tracking-wider text-base-muted">Controls & Constraints</h2>
 
       {/* Constraints */}

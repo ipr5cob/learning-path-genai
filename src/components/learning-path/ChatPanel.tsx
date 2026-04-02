@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import { Send, Loader2, Sparkles, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
-import { supabase } from '@/integrations/supabase/client';
-
-type Message = { role: 'user' | 'assistant'; content: string };
+import { useState } from 'react';
+import type { Message } from './types';
 
 const SUGGESTIONS = [
   'Azure DevOps',
@@ -14,8 +13,12 @@ const SUGGESTIONS = [
   'React & TypeScript',
 ];
 
-const ChatPanel = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+interface ChatPanelProps {
+  messages: Message[];
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+}
+
+const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -127,15 +130,12 @@ const ChatPanel = () => {
 
   return (
     <main className="flex-1 h-full flex flex-col bg-base-major">
-      {/* Chat messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full space-y-6">
             <div className="flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-accent-major" />
-              <h2 className="text-lg font-semibold text-base-text">
-                Learning Path Generator
-              </h2>
+              <h2 className="text-lg font-semibold text-base-text">Learning Path Generator</h2>
             </div>
             <p className="text-sm text-base-muted text-center max-w-md">
               Enter a topic to generate an AI-powered, structured learning path.
@@ -155,10 +155,7 @@ const ChatPanel = () => {
           </div>
         ) : (
           messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div
                 className={`max-w-[85%] rounded-lg px-4 py-3 ${
                   msg.role === 'user'
@@ -187,7 +184,6 @@ const ChatPanel = () => {
         )}
       </div>
 
-      {/* Input */}
       <div className="border-t border-base-pure bg-plain-white p-3">
         <div className="flex items-center gap-2">
           {messages.length > 0 && (

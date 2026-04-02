@@ -1,20 +1,18 @@
 import { useState } from 'react';
 import { explainabilityData } from './data';
-import { AlertTriangle, BookOpen, Brain, Search, Plus } from 'lucide-react';
+import { AlertTriangle, BookOpen, Brain, Search, Plus, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-type Tab = 'explain' | 'reasoning' | 'gaps' | 'citations';
+type Tab = 'about' | 'tips' | 'examples';
 
 const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-  { id: 'explain', label: 'Explain', icon: <BookOpen className="h-3 w-3" /> },
-  { id: 'reasoning', label: 'AI Reasoning', icon: <Brain className="h-3 w-3" /> },
-  { id: 'gaps', label: 'Gap Analysis', icon: <AlertTriangle className="h-3 w-3" /> },
-  { id: 'citations', label: 'Citations', icon: <Search className="h-3 w-3" /> },
+  { id: 'about', label: 'About', icon: <Info className="h-3 w-3" /> },
+  { id: 'tips', label: 'Tips', icon: <Brain className="h-3 w-3" /> },
+  { id: 'examples', label: 'Examples', icon: <BookOpen className="h-3 w-3" /> },
 ];
 
 const RightPanel = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('explain');
-  const d = explainabilityData;
+  const [activeTab, setActiveTab] = useState<Tab>('about');
 
   return (
     <aside className="w-full h-full bg-contrast-bg text-contrast-text overflow-y-auto custom-scrollbar flex flex-col">
@@ -41,107 +39,78 @@ const RightPanel = () => {
       </div>
 
       <div className="flex-1 p-4 space-y-4">
-        {activeTab === 'explain' && (
+        {activeTab === 'about' && (
           <>
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-accent-pure">Why This Order</h3>
-              <p className="text-xs text-contrast-muted leading-relaxed">{d.orderReason}</p>
+              <h3 className="text-xs font-semibold text-accent-pure">How It Works</h3>
+              <p className="text-xs text-contrast-muted leading-relaxed">
+                Type any topic into the chat and the AI will generate a structured learning path from Beginner to Advanced level.
+              </p>
             </div>
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-accent-pure">Dependency Summary</h3>
-              <p className="text-xs text-contrast-muted leading-relaxed">{d.dependencySummary}</p>
+              <h3 className="text-xs font-semibold text-accent-pure">What You Get</h3>
+              <ul className="space-y-1.5 text-xs text-contrast-muted">
+                <li className="flex items-start gap-2">
+                  <span className="text-signal-success mt-0.5">✓</span>
+                  Structured modules from beginner to advanced
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-signal-success mt-0.5">✓</span>
+                  Duration estimates and modality suggestions
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-signal-success mt-0.5">✓</span>
+                  Gap analysis and recommendations
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-signal-success mt-0.5">✓</span>
+                  AI reasoning and confidence scores
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-signal-success mt-0.5">✓</span>
+                  Follow-up refinement via conversation
+                </li>
+              </ul>
             </div>
             <div className="p-3 rounded bg-contrast-secondary border border-contrast-secondary space-y-2">
-              <h4 className="text-[10px] font-semibold uppercase tracking-wider text-contrast-muted">Dependency Graph</h4>
-              <div className="text-xs font-mono text-contrast-muted space-y-1">
-                <p>M1 → M2</p>
-                <p>M2 → M3, M4, M5</p>
-                <p>M4 → M6</p>
-                <p>M4 + M6 → M7</p>
-              </div>
+              <h4 className="text-[10px] font-semibold uppercase tracking-wider text-contrast-muted">Conversational</h4>
+              <p className="text-xs text-contrast-muted leading-relaxed">
+                After generating a path, ask follow-up questions like "Add more advanced modules" or "Focus on hands-on labs" to refine it.
+              </p>
             </div>
           </>
         )}
 
-        {activeTab === 'reasoning' && (
-          <>
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-accent-pure">AI-Generated Module Analysis</h3>
-              {d.aiReasoning.map((r, i) => (
-                <div key={i} className="p-3 rounded bg-contrast-secondary border border-contrast-secondary space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-contrast-text">{r.module}</span>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-sm ${
-                      r.confidence >= 90 ? 'bg-signal-success/20 text-signal-success' : r.confidence >= 80 ? 'bg-signal-warning/20 text-signal-warning' : 'bg-signal-error/20 text-signal-error'
-                    }`}>
-                      {r.confidence}%
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[10px] text-contrast-muted">Similarity:</span>
-                    <div className="flex-1 h-1.5 rounded-full bg-contrast-bg overflow-hidden">
-                      <div className="h-full bg-accent-major rounded-full" style={{ width: `${r.similarity * 100}%` }} />
-                    </div>
-                    <span className="text-[10px] text-contrast-muted">{(r.similarity * 100).toFixed(0)}%</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {r.skills.map((s) => (
-                      <span key={s} className="text-[10px] px-1.5 py-0.5 rounded-sm bg-signal-info/10 text-signal-info">{s}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+        {activeTab === 'tips' && (
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-accent-pure">Query Tips</h3>
+            {[
+              { tip: 'Be specific', example: '"Azure DevOps for backend engineers" instead of just "DevOps"' },
+              { tip: 'Set constraints', example: '"Create a 10-hour path for beginners in Kubernetes"' },
+              { tip: 'Specify audience', example: '"Machine Learning path for product managers"' },
+              { tip: 'Request focus', example: '"Deep dive into CI/CD pipelines only"' },
+              { tip: 'Iterate', example: '"Remove Module 3 and add more on testing"' },
+            ].map((t, i) => (
+              <div key={i} className="p-3 rounded bg-contrast-secondary border border-contrast-secondary space-y-1">
+                <span className="text-xs font-medium text-contrast-text">{t.tip}</span>
+                <p className="text-[10px] text-contrast-muted italic">"{t.example}"</p>
+              </div>
+            ))}
+          </div>
         )}
 
-        {activeTab === 'gaps' && (
-          <>
-            <div className="p-3 rounded bg-signal-error/10 border border-signal-error/20 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-signal-error">Missing Coverage</span>
-                <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-sm bg-signal-error/20 text-signal-error">
-                  {d.gapAnalysis.severity}
-                </span>
-              </div>
-              <p className="text-xs text-contrast-muted">{d.gapAnalysis.area}</p>
-              <p className="text-xs text-contrast-muted">{d.gapAnalysis.description}</p>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-contrast-muted">Confidence:</span>
-                <span className="font-medium text-signal-error">{d.gapAnalysis.confidence}%</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-accent-pure">Suggested Modules</h3>
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between p-2 rounded bg-contrast-secondary">
-                  <span className="text-xs text-contrast-text">Azure Monitor Integration</span>
-                  <Button size="sm" className="h-5 text-[10px] bg-accent-major hover:bg-accent-hover text-plain-white">
-                    <Plus className="h-2.5 w-2.5 mr-0.5" />Add
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between p-2 rounded bg-contrast-secondary">
-                  <span className="text-xs text-contrast-text">App Insights Observability</span>
-                  <Button size="sm" className="h-5 text-[10px] bg-accent-major hover:bg-accent-hover text-plain-white">
-                    <Plus className="h-2.5 w-2.5 mr-0.5" />Add
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {activeTab === 'citations' && (
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-accent-pure">Sources Used</h3>
-            {d.citations.map((c, i) => (
-              <div key={i} className="flex items-center justify-between p-2.5 rounded bg-contrast-secondary border border-contrast-secondary">
-                <span className="text-xs text-contrast-text">{c.source}</span>
-                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-sm ${
-                  c.confidence >= 90 ? 'bg-signal-success/20 text-signal-success' : 'bg-signal-warning/20 text-signal-warning'
-                }`}>
-                  {c.confidence}%
-                </span>
+        {activeTab === 'examples' && (
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-accent-pure">Example Queries</h3>
+            {[
+              'Create a learning path for Azure DevOps targeting advanced engineers',
+              'Build a 15-hour Kubernetes fundamentals curriculum',
+              'Design a data engineering path covering Spark, Airflow, and dbt',
+              'Generate a cybersecurity awareness path for non-technical staff',
+              'Create a React & TypeScript learning path with hands-on projects',
+            ].map((q, i) => (
+              <div key={i} className="p-2.5 rounded bg-contrast-secondary border border-contrast-secondary">
+                <p className="text-xs text-contrast-muted">{q}</p>
               </div>
             ))}
           </div>

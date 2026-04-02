@@ -8,7 +8,7 @@ interface HeaderProps {
   hasMessages: boolean;
 }
 
-const Header = ({ onSave, hasMessages }: HeaderProps) => {
+const Header = ({ onSave, onExport, hasMessages }: HeaderProps) => {
   return (
     <header className="bg-plain-white border-b border-base-pure/60 px-6 py-3.5">
       <div className="flex items-center justify-between">

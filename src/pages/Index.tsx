@@ -1,16 +1,28 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Header from '@/components/learning-path/Header';
+import LeftPanel from '@/components/learning-path/LeftPanel';
+import CenterPanel from '@/components/learning-path/CenterPanel';
+import RightPanel from '@/components/learning-path/RightPanel';
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="flex flex-col h-screen bg-base-major">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Panel - 20% */}
+        <div className="w-[20%] min-w-[240px] border-r border-base-pure">
+          <LeftPanel />
+        </div>
+        {/* Center Panel - 55% */}
+        <div className="flex-1">
+          <CenterPanel />
+        </div>
+        {/* Right Panel - 25% */}
+        <div className="w-[25%] min-w-[280px] border-l border-base-pure">
+          <RightPanel />
+        </div>
+      </div>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;

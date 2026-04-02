@@ -4,10 +4,11 @@ import thubLogo from '@/assets/thub-logo.png';
 
 interface HeaderProps {
   onSave: () => void;
+  onExport: () => void;
   hasMessages: boolean;
 }
 
-const Header = ({ onSave, hasMessages }: HeaderProps) => {
+const Header = ({ onSave, onExport, hasMessages }: HeaderProps) => {
   return (
     <header className="bg-plain-white border-b border-base-pure/60 px-6 py-3.5">
       <div className="flex items-center justify-between">
@@ -29,7 +30,12 @@ const Header = ({ onSave, hasMessages }: HeaderProps) => {
             <Save className="h-3.5 w-3.5 mr-1.5" />
             Save
           </Button>
-          <Button size="sm" className="h-8 text-xs bg-accent-major text-plain-white hover:bg-accent-hover transition-all">
+          <Button
+            size="sm"
+            onClick={onExport}
+            disabled={!hasMessages}
+            className="h-8 text-xs bg-accent-major text-plain-white hover:bg-accent-hover disabled:opacity-30 transition-all"
+          >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export
           </Button>

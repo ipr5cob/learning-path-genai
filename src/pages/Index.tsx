@@ -60,9 +60,27 @@ const Index = () => {
     }
   }, [savedPaths]);
 
+  const handleExport = useCallback(() => {
+    if (messages.length === 0) {
+      toast.error('Nothing to export — start a conversation first.');
+      return;
+    }
+    const md = messages
+      .map((m) => (m.role === 'user' ? `**You:** ${m.content}` : m.content))
+      .join('\n\n---\n\n');
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `learning-path-${new Date().toISOString().slice(0, 10)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Learning path exported!');
+  }, [messages]);
+
   return (
     <div className="flex flex-col h-screen bg-base-major">
-      <Header onSave={handleSave} hasMessages={messages.length > 0} />
+      <Header onSave={handleSave} onExport={handleExport} hasMessages={messages.length > 0} />
       <div className="flex flex-1 overflow-hidden">
         <div className="w-[260px] min-w-[240px] border-r border-base-pure">
           <LeftPanel

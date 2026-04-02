@@ -5,8 +5,6 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const LeftPanel = () => {
-  const [proficiency, setProficiency] = useState('Advanced');
-  const [audience, setAudience] = useState('Engineer');
   const [maxDuration, setMaxDuration] = useState([20]);
   const [modality, setModality] = useState('Self-paced');
   const [language, setLanguage] = useState('English');
@@ -18,40 +16,6 @@ const LeftPanel = () => {
   return (
     <aside className="w-full h-full bg-base-minor overflow-y-auto custom-scrollbar p-4 space-y-4">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-base-muted mb-3">Controls & Constraints</h2>
-
-      {/* Target Settings */}
-      <div className="bg-plain-white rounded border border-base-pure p-3 space-y-3">
-        <h3 className="text-xs font-semibold text-base-text">Target Settings</h3>
-        <div className="space-y-2">
-          <Label className="text-xs text-base-muted">Proficiency</Label>
-          <div className="flex gap-1">
-            {['Beginner', 'Intermediate', 'Advanced'].map((p) => (
-              <button
-                key={p}
-                onClick={() => setProficiency(p)}
-                className={`flex-1 text-xs py-1.5 rounded-sm border transition-colors ${
-                  proficiency === p
-                    ? 'bg-accent-major text-plain-white border-accent-major'
-                    : 'bg-plain-white text-base-muted border-base-pure hover:bg-base-major'
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-xs text-base-muted">Audience</Label>
-          <Select value={audience} onValueChange={setAudience}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Engineer">Engineer</SelectItem>
-              <SelectItem value="Manager">Manager</SelectItem>
-              <SelectItem value="Sales">Sales</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
       {/* Constraints */}
       <div className="bg-plain-white rounded border border-base-pure p-3 space-y-3">

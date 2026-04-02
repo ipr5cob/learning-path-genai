@@ -1,6 +1,6 @@
 import Header from '@/components/learning-path/Header';
 import LeftPanel from '@/components/learning-path/LeftPanel';
-import CenterPanel from '@/components/learning-path/CenterPanel';
+import ChatPanel from '@/components/learning-path/ChatPanel';
 import RightPanel from '@/components/learning-path/RightPanel';
 
 const Index = () => {
@@ -12,9 +12,9 @@ const Index = () => {
         <div className="w-[20%] min-w-[240px] border-r border-base-pure">
           <LeftPanel />
         </div>
-        {/* Center Panel - 55% */}
+        {/* Center Panel - Chat */}
         <div className="flex-1">
-          <CenterPanel />
+          <ChatPanel />
         </div>
         {/* Right Panel - 25% */}
         <div className="w-[25%] min-w-[280px] border-l border-base-pure">

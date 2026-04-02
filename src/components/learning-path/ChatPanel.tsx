@@ -1,5 +1,5 @@
 import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
-import { Send, Loader2, Sparkles, RotateCcw } from 'lucide-react';
+import { Send, Loader2, Sparkles, RotateCcw, Bot, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { useState } from 'react';
@@ -130,23 +130,28 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
 
   return (
     <main className="flex-1 h-full flex flex-col bg-base-major">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6 space-y-5">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full space-y-6">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-6 w-6 text-accent-major" />
-              <h2 className="text-lg font-semibold text-base-text">Learning Path Generator</h2>
+          <div className="flex flex-col items-center justify-center h-full space-y-8">
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-12 h-12 rounded-xl bg-accent-minor flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-accent-major" />
+              </div>
+              <h2 className="text-lg font-semibold text-base-text tracking-tight">
+                Learning Path Generator
+              </h2>
+              <p className="text-sm text-base-muted max-w-md leading-relaxed">
+                Enter a topic to generate a structured, AI-powered learning path
+                with progressive modules from beginner to advanced.
+              </p>
             </div>
-            <p className="text-sm text-base-muted text-center max-w-md">
-              Enter a topic to generate an AI-powered, structured learning path.
-              The AI will create a progressive curriculum from beginner to advanced.
-            </p>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
                   onClick={() => handleSend(s)}
-                  className="text-xs px-3 py-1.5 rounded-full border border-accent-pure text-accent-major bg-accent-minor hover:bg-accent-pure/30 transition-colors"
+                  className="text-xs px-4 py-2 rounded-lg border border-accent-pure/40 text-accent-major bg-plain-white hover:bg-accent-minor hover:border-accent-pure transition-all shadow-sm"
                 >
                   {s}
                 </button>
@@ -155,63 +160,84 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
           </div>
         ) : (
           messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {msg.role === 'assistant' && (
+                <div className="shrink-0 mt-1">
+                  <div className="w-7 h-7 rounded-lg bg-emphasis-purple-light flex items-center justify-center">
+                    <Bot className="h-3.5 w-3.5 text-emphasis-purple" />
+                  </div>
+                </div>
+              )}
               <div
-                className={`max-w-[85%] rounded-lg px-4 py-3 ${
+                className={`rounded-xl ${
                   msg.role === 'user'
-                    ? 'bg-accent-major text-plain-white'
-                    : 'bg-plain-white border border-base-pure text-base-text'
+                    ? 'bg-accent-major text-plain-white px-4 py-2.5 max-w-[70%]'
+                    : 'bg-plain-white border border-base-pure/40 shadow-sm px-5 py-4 max-w-[88%]'
                 }`}
               >
                 {msg.role === 'assistant' ? (
-                  <div className="prose prose-sm max-w-none prose-headings:text-base-text prose-p:text-base-muted prose-li:text-base-muted prose-strong:text-base-text prose-code:text-accent-major prose-code:bg-accent-minor prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs">
+                  <div className="ai-prose">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
                 ) : (
-                  <p className="text-sm">{msg.content}</p>
+                  <p className="text-sm leading-relaxed">{msg.content}</p>
                 )}
               </div>
+              {msg.role === 'user' && (
+                <div className="shrink-0 mt-1">
+                  <div className="w-7 h-7 rounded-lg bg-accent-major/10 flex items-center justify-center">
+                    <User className="h-3.5 w-3.5 text-accent-major" />
+                  </div>
+                </div>
+              )}
             </div>
           ))
         )}
         {isLoading && messages[messages.length - 1]?.role === 'user' && (
-          <div className="flex justify-start">
-            <div className="bg-plain-white border border-base-pure rounded-lg px-4 py-3 flex items-center gap-2 text-sm text-base-muted">
+          <div className="flex gap-3 justify-start">
+            <div className="shrink-0 mt-1">
+              <div className="w-7 h-7 rounded-lg bg-emphasis-purple-light flex items-center justify-center">
+                <Bot className="h-3.5 w-3.5 text-emphasis-purple" />
+              </div>
+            </div>
+            <div className="bg-plain-white border border-base-pure/40 shadow-sm rounded-xl px-5 py-4 flex items-center gap-2.5">
               <Loader2 className="h-4 w-4 animate-spin text-accent-major" />
-              Generating learning path...
+              <span className="text-xs text-base-muted">Generating learning path…</span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="border-t border-base-pure bg-plain-white p-3">
-        <div className="flex items-center gap-2">
+      {/* Input bar */}
+      <div className="border-t border-base-pure/40 bg-plain-white px-6 py-4">
+        <div className="flex items-center gap-3">
           {messages.length > 0 && (
             <Button
               variant="outline"
               size="sm"
               onClick={handleReset}
-              className="shrink-0 text-xs border-base-pure text-base-muted hover:bg-base-minor"
+              className="shrink-0 h-9 w-9 p-0 border-base-pure/40 text-base-muted hover:bg-base-major hover:text-base-text transition-all rounded-lg"
+              title="New conversation"
             >
               <RotateCcw className="h-3.5 w-3.5" />
             </Button>
           )}
-          <div className="flex-1 flex items-center gap-2 bg-base-major rounded-lg border border-base-pure px-3 py-2 focus-within:border-accent-major transition-colors">
+          <div className="flex-1 flex items-center gap-2 bg-base-major/60 rounded-xl border border-base-pure/40 px-4 py-2.5 focus-within:border-accent-major focus-within:bg-plain-white focus-within:shadow-sm transition-all">
             <input
               ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter a topic (e.g., Azure DevOps, Kubernetes, React)..."
-              className="flex-1 bg-transparent text-sm text-base-text placeholder:text-base-muted outline-none"
+              placeholder="Enter a topic (e.g., Azure DevOps, Kubernetes, React)…"
+              className="flex-1 bg-transparent text-sm text-base-text placeholder:text-base-muted/60 outline-none"
               disabled={isLoading}
             />
             <Button
               size="sm"
               onClick={() => handleSend()}
               disabled={!input.trim() || isLoading}
-              className="h-7 w-7 p-0 bg-accent-major text-plain-white hover:bg-accent-hover disabled:opacity-40"
+              className="h-8 w-8 p-0 bg-accent-major text-plain-white hover:bg-accent-hover disabled:opacity-30 transition-all rounded-lg"
             >
               <Send className="h-3.5 w-3.5" />
             </Button>

@@ -50,7 +50,7 @@ serve(async (req) => {
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...corsHeaders, "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (e) {
     console.error("chat error:", e);

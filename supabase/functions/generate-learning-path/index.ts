@@ -26,6 +26,10 @@ serve(async (req) => {
       throw new Error("AI_PIPELINE_URL is not configured. Set it to your AI pipeline base URL.");
     }
 
+    // Build a single string from the last user message
+    const lastUserMsg = [...messages].reverse().find((m: any) => m.role === "user");
+    const message = lastUserMsg?.content || "";
+
     const endpoint = `${AI_PIPELINE_URL.replace(/\/+$/, "")}/chat`;
 
     const response = await fetch(endpoint, {
@@ -33,10 +37,7 @@ serve(async (req) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        messages,
-        stream: true,
-      }),
+      body: JSON.stringify({ message }),
     });
 
     if (!response.ok) {

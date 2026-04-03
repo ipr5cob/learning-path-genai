@@ -4,17 +4,18 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BookOpen, Clock, Trash2, FolderOpen, Upload, Download } from 'lucide-react';
+import { BookOpen, Clock, Trash2, FolderOpen, Upload, Download, Loader2 } from 'lucide-react';
 import type { SavedPath } from './types';
 
 interface LeftPanelProps {
   savedPaths: SavedPath[];
+  loading?: boolean;
   onDeletePath: (id: string) => void;
   onLoadPath: (id: string) => void;
   onImportPaths: (paths: SavedPath[]) => void;
 }
 
-const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
+const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
   const [maxDuration, setMaxDuration] = useState([20]);
   const [modality, setModality] = useState('Self-paced');
   const [language, setLanguage] = useState('English');
@@ -88,7 +89,12 @@ const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath, onImportPaths }: Left
           </div>
         </div>
         <div className="space-y-1.5">
-          {savedPaths.length === 0 ? (
+          {loading ? (
+            <div className="panel-card text-center py-5">
+              <Loader2 className="h-5 w-5 text-accent-major mx-auto mb-2 animate-spin" />
+              <p className="text-xs text-base-muted">Loading saved paths…</p>
+            </div>
+          ) : savedPaths.length === 0 ? (
             <div className="panel-card text-center py-5">
               <BookOpen className="h-5 w-5 text-base-pure mx-auto mb-2" />
               <p className="text-xs text-base-muted">No saved paths yet</p>

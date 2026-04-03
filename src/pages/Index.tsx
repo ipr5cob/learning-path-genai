@@ -4,6 +4,8 @@ import { jsPDF } from 'jspdf';
 import Header from '@/components/learning-path/Header';
 import LeftPanel from '@/components/learning-path/LeftPanel';
 import ChatPanel from '@/components/learning-path/ChatPanel';
+import SessionExtendDialog from '@/components/learning-path/SessionExtendDialog';
+import { useSessionManager } from '@/hooks/useSessionManager';
 import type { Message, SavedPath } from '@/components/learning-path/types';
 
 const STORAGE_KEY = 'thub-saved-paths';

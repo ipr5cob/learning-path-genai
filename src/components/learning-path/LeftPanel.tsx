@@ -14,13 +14,10 @@ interface LeftPanelProps {
 }
 
 const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
-  const [maxDuration, setMaxDuration] = useState([20]);
-  const [modality, setModality] = useState('Self-paced');
-  const [language, setLanguage] = useState('English');
   const [internalFirst, setInternalFirst] = useState(true);
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
-  const [pathStrategy, setPathStrategy] = useState('balanced');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportAll = () => {

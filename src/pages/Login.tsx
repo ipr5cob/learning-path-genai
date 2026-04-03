@@ -3,9 +3,25 @@ import { Button } from '@/components/ui/button';
 import thubLogo from '@/assets/thub-logo.png';
 
 const Login = () => {
-  const handleSSOLogin = () => {
-    // Placeholder: will be wired to Entra ID SSO endpoint
-    console.log('Initiating Entra ID SSO...');
+  const handleSSOLogin = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('entra-auth', {
+        body: {
+          action: 'login',
+          redirect_uri: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+
+      // Save state for CSRF verification
+      sessionStorage.setItem('entra_oauth_state', data.state);
+
+      // Redirect to Microsoft login
+      window.location.href = data.auth_url;
+    } catch (e) {
+      console.error('SSO login error:', e);
+    }
   };
 
   return (

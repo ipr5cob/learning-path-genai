@@ -11,7 +11,7 @@ import type { Message } from '@/components/learning-path/types';
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const { savedPaths, savePath, deletePath, loadPath, importPaths } = useSavedPaths();
+  const { savedPaths, loading, savePath, deletePath, loadPath, importPaths } = useSavedPaths();
   const { showExtendPrompt, extendSession, logout } = useSessionManager();
 
   const handleSave = useCallback(() => {

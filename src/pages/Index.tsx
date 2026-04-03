@@ -97,6 +97,7 @@ const Index = () => {
             savedPaths={savedPaths}
             onDeletePath={handleDeletePath}
             onLoadPath={handleLoadPath}
+            onImportPaths={handleImportPaths}
           />
         </div>
         <div className="flex-1">

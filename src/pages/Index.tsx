@@ -60,6 +60,16 @@ const Index = () => {
     }
   }, [savedPaths]);
 
+  const handleImportPaths = useCallback((imported: SavedPath[]) => {
+    setSavedPaths((prev) => {
+      const existingIds = new Set(prev.map((p) => p.id));
+      const newPaths = imported.filter((p) => !existingIds.has(p.id));
+      const updated = [...newPaths, ...prev];
+      persistSaved(updated);
+      return updated;
+    });
+  }, []);
+
   const handleExport = useCallback(() => {
     if (messages.length === 0) {
       toast.error('Nothing to export — start a conversation first.');

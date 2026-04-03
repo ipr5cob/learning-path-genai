@@ -1,9 +1,7 @@
 import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookOpen, Clock, Trash2, FolderOpen, Upload, Download, Loader2 } from 'lucide-react';
 import type { SavedPath } from './types';
 
@@ -16,13 +14,9 @@ interface LeftPanelProps {
 }
 
 const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
-  const [maxDuration, setMaxDuration] = useState([20]);
-  const [modality, setModality] = useState('Self-paced');
-  const [language, setLanguage] = useState('English');
   const [internalFirst, setInternalFirst] = useState(true);
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
-  const [pathStrategy, setPathStrategy] = useState('balanced');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportAll = () => {
@@ -138,55 +132,6 @@ const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPath
       {/* Divider */}
       <div className="border-t border-base-pure/40" />
 
-      {/* Constraints */}
-      <div>
-        <h2 className="panel-title mb-3">Constraints</h2>
-        <div className="panel-card space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between items-baseline">
-              <Label className="panel-label">Max Duration</Label>
-              <span className="text-xs font-semibold text-accent-major">{maxDuration[0]}h</span>
-            </div>
-            <Slider value={maxDuration} onValueChange={setMaxDuration} max={40} min={4} step={1} className="w-full" />
-          </div>
-
-          <div className="border-t border-base-major" />
-
-          <div className="space-y-2">
-            <Label className="panel-label">Modality</Label>
-            <div className="flex gap-1">
-              {['Self-paced', 'ILT', 'Virtual'].map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setModality(m)}
-                  className={`flex-1 text-[11px] py-1.5 rounded-md border transition-all ${
-                    modality === m
-                      ? 'bg-accent-major text-plain-white border-accent-major shadow-sm'
-                      : 'bg-plain-white text-base-muted border-base-pure/40 hover:bg-base-major hover:border-base-pure'
-                  }`}
-                >
-                  {m}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="border-t border-base-major" />
-
-          <div className="space-y-2">
-            <Label className="panel-label">Language</Label>
-            <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="h-8 text-xs border-base-pure/40"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">English</SelectItem>
-                <SelectItem value="Spanish">Spanish</SelectItem>
-                <SelectItem value="German">German</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-
       {/* AI Controls */}
       <div>
         <h2 className="panel-title mb-3">AI Controls</h2>
@@ -207,39 +152,6 @@ const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPath
         </div>
       </div>
 
-      {/* Path Strategy */}
-      <div>
-        <h2 className="panel-title mb-3">Path Strategy</h2>
-        <div className="panel-card space-y-2">
-          {[
-            { value: 'fastest', label: 'Fastest path', desc: 'Minimum viable coverage' },
-            { value: 'balanced', label: 'Balanced path', desc: 'Recommended coverage' },
-            { value: 'comprehensive', label: 'Comprehensive', desc: 'Full depth coverage' },
-          ].map(({ value, label, desc }) => (
-            <label
-              key={value}
-              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition-all ${
-                pathStrategy === value ? 'bg-accent-minor/50' : 'hover:bg-base-major'
-              }`}
-            >
-              <input
-                type="radio"
-                name="strategy"
-                value={value}
-                checked={pathStrategy === value}
-                onChange={() => setPathStrategy(value)}
-                className="h-3.5 w-3.5 accent-accent-major shrink-0"
-              />
-              <div>
-                <span className={`text-xs block ${pathStrategy === value ? 'text-accent-major font-semibold' : 'text-base-text font-medium'}`}>
-                  {label}
-                </span>
-                <span className="text-[10px] text-base-muted">{desc}</span>
-              </div>
-            </label>
-          ))}
-        </div>
-      </div>
     </aside>
   );
 };

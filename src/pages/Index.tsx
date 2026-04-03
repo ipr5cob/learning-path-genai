@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
 import Header from '@/components/learning-path/Header';
 import LeftPanel from '@/components/learning-path/LeftPanel';
 import ChatPanel from '@/components/learning-path/ChatPanel';

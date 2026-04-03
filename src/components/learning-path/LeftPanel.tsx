@@ -18,7 +18,6 @@ const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPath
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExportAll = () => {
     if (savedPaths.length === 0) {

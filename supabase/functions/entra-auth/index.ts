@@ -6,13 +6,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+function decodeJwtPayload(token: string) {
+  const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+  const json = atob(base64);
+  return JSON.parse(json);
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
-
-  const url = new URL(req.url);
-  const path = url.pathname.split("/").pop();
 
   const CLIENT_ID = Deno.env.get("ENTRA_CLIENT_ID")!;
   const TENANT_ID = Deno.env.get("ENTRA_TENANT_ID")!;
@@ -33,7 +36,6 @@ serve(async (req) => {
       redirect_uri?: string;
     };
 
-    // Step 1: Generate authorization URL
     if (action === "login") {
       if (!redirect_uri) {
         return new Response(
@@ -48,9 +50,8 @@ serve(async (req) => {
       authUrl.searchParams.set("client_id", CLIENT_ID);
       authUrl.searchParams.set("response_type", "code");
       authUrl.searchParams.set("redirect_uri", redirect_uri);
-      authUrl.searchParams.set("scope", "openid profile email User.Read");
+      authUrl.searchParams.set("scope", "openid profile email");
       authUrl.searchParams.set("response_mode", "query");
-      // Generate a random state for CSRF protection
       const state = crypto.randomUUID();
       authUrl.searchParams.set("state", state);
 
@@ -60,7 +61,6 @@ serve(async (req) => {
       );
     }
 
-    // Step 2: Exchange authorization code for tokens
     if (action === "callback") {
       if (!code || !redirect_uri) {
         return new Response(
@@ -80,7 +80,7 @@ serve(async (req) => {
           code,
           redirect_uri,
           grant_type: "authorization_code",
-          scope: "openid profile email User.Read",
+          scope: "openid profile email",
         }),
       });
 
@@ -95,31 +95,28 @@ serve(async (req) => {
 
       const tokens = await tokenResponse.json();
 
-      // Fetch user profile from Microsoft Graph
-      const profileResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
-        headers: { Authorization: `Bearer ${tokens.access_token}` },
-      });
-
+      // Extract user info from id_token (no Graph API call needed)
       let user = null;
-      if (profileResponse.ok) {
-        user = await profileResponse.json();
+      if (tokens.id_token) {
+        try {
+          const claims = decodeJwtPayload(tokens.id_token);
+          user = {
+            id: claims.oid || claims.sub,
+            email: claims.email || claims.preferred_username || claims.upn,
+            name: claims.name,
+            given_name: claims.given_name,
+            surname: claims.family_name,
+          };
+        } catch (e) {
+          console.error("Failed to decode id_token:", e);
+        }
       }
 
       return new Response(
         JSON.stringify({
-          access_token: tokens.access_token,
           id_token: tokens.id_token,
           expires_in: tokens.expires_in,
-          user: user
-            ? {
-                id: user.id,
-                email: user.mail || user.userPrincipalName,
-                name: user.displayName,
-                given_name: user.givenName,
-                surname: user.surname,
-                job_title: user.jobTitle,
-              }
-            : null,
+          user,
         }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );

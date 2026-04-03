@@ -138,55 +138,6 @@ const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPath
       {/* Divider */}
       <div className="border-t border-base-pure/40" />
 
-      {/* Constraints */}
-      <div>
-        <h2 className="panel-title mb-3">Constraints</h2>
-        <div className="panel-card space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between items-baseline">
-              <Label className="panel-label">Max Duration</Label>
-              <span className="text-xs font-semibold text-accent-major">{maxDuration[0]}h</span>
-            </div>
-            <Slider value={maxDuration} onValueChange={setMaxDuration} max={40} min={4} step={1} className="w-full" />
-          </div>
-
-          <div className="border-t border-base-major" />
-
-          <div className="space-y-2">
-            <Label className="panel-label">Modality</Label>
-            <div className="flex gap-1">
-              {['Self-paced', 'ILT', 'Virtual'].map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setModality(m)}
-                  className={`flex-1 text-[11px] py-1.5 rounded-md border transition-all ${
-                    modality === m
-                      ? 'bg-accent-major text-plain-white border-accent-major shadow-sm'
-                      : 'bg-plain-white text-base-muted border-base-pure/40 hover:bg-base-major hover:border-base-pure'
-                  }`}
-                >
-                  {m}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="border-t border-base-major" />
-
-          <div className="space-y-2">
-            <Label className="panel-label">Language</Label>
-            <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="h-8 text-xs border-base-pure/40"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">English</SelectItem>
-                <SelectItem value="Spanish">Spanish</SelectItem>
-                <SelectItem value="German">German</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-
       {/* AI Controls */}
       <div>
         <h2 className="panel-title mb-3">AI Controls</h2>

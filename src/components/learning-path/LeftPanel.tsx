@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BookOpen, Clock, Trash2, FolderOpen } from 'lucide-react';
+import { BookOpen, Clock, Trash2, FolderOpen, Upload, Download } from 'lucide-react';
 import type { SavedPath } from './types';
 
 interface LeftPanelProps {
   savedPaths: SavedPath[];
   onDeletePath: (id: string) => void;
   onLoadPath: (id: string) => void;
+  onImportPaths: (paths: SavedPath[]) => void;
 }
 
-const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath }: LeftPanelProps) => {
+const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
   const [maxDuration, setMaxDuration] = useState([20]);
   const [modality, setModality] = useState('Self-paced');
   const [language, setLanguage] = useState('English');
@@ -20,14 +22,70 @@ const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath }: LeftPanelProps) => 
   const [allowExternal, setAllowExternal] = useState(false);
   const [approvedOnly, setApprovedOnly] = useState(true);
   const [pathStrategy, setPathStrategy] = useState('balanced');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleExportAll = () => {
+    if (savedPaths.length === 0) {
+      toast.error('No saved paths to export.');
+      return;
+    }
+    const blob = new Blob([JSON.stringify(savedPaths, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `learning-paths-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${savedPaths.length} path(s).`);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = JSON.parse(evt.target?.result as string);
+        if (!Array.isArray(data) || !data.every((p: any) => p.id && p.title && p.messages)) {
+          toast.error('Invalid backup file format.');
+          return;
+        }
+        onImportPaths(data as SavedPath[]);
+        toast.success(`Imported ${data.length} path(s).`);
+      } catch {
+        toast.error('Failed to parse backup file.');
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   return (
     <aside className="w-full h-full bg-base-minor/50 overflow-y-auto custom-scrollbar p-4 space-y-5">
       {/* Saved Learning Paths */}
       <div>
-        <div className="flex items-center gap-1.5 mb-3">
-          <FolderOpen className="h-3 w-3 text-base-muted" />
-          <h2 className="panel-title">Saved Paths</h2>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5">
+            <FolderOpen className="h-3 w-3 text-base-muted" />
+            <h2 className="panel-title">Saved Paths</h2>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              title="Import paths"
+              className="p-1.5 rounded-md text-base-muted hover:text-accent-major hover:bg-accent-minor/50 transition-all"
+            >
+              <Upload className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={handleExportAll}
+              title="Export all paths"
+              className="p-1.5 rounded-md text-base-muted hover:text-accent-major hover:bg-accent-minor/50 transition-all"
+            >
+              <Download className="h-3.5 w-3.5" />
+            </button>
+            <input ref={fileInputRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+          </div>
         </div>
         <div className="space-y-1.5">
           {savedPaths.length === 0 ? (

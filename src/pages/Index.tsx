@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
 import Header from '@/components/learning-path/Header';
 import LeftPanel from '@/components/learning-path/LeftPanel';
 import ChatPanel from '@/components/learning-path/ChatPanel';
@@ -75,17 +76,49 @@ const Index = () => {
       toast.error('Nothing to export — start a conversation first.');
       return;
     }
-    const md = messages
-      .map((m) => (m.role === 'user' ? `**You:** ${m.content}` : m.content))
-      .join('\n\n---\n\n');
-    const blob = new Blob([md], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `learning-path-${new Date().toISOString().slice(0, 10)}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success('Learning path exported!');
+
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    const maxWidth = pageWidth - margin * 2;
+    let y = 20;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('Learning Path', margin, y);
+    y += 6;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(120);
+    doc.text(`Exported on ${new Date().toLocaleDateString()}`, margin, y);
+    doc.setTextColor(0);
+    y += 10;
+
+    messages.forEach((m) => {
+      const isUser = m.role === 'user';
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(isUser ? 0 : 59, isUser ? 0 : 130, isUser ? 0 : 246);
+      doc.text(isUser ? 'You' : 'Assistant', margin, y);
+      y += 5;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(40);
+      const lines = doc.splitTextToSize(m.content, maxWidth);
+      for (const line of lines) {
+        if (y > 280) {
+          doc.addPage();
+          y = 15;
+        }
+        doc.text(line, margin, y);
+        y += 4.5;
+      }
+      y += 6;
+    });
+
+    doc.save(`learning-path-${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast.success('Learning path exported as PDF!');
   }, [messages]);
 
   return (

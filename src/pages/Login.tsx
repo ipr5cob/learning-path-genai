@@ -117,7 +117,7 @@ const Login = () => {
             <div className="flex items-start gap-2.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emphasis-purple mt-1.5 shrink-0" />
               <p className="text-xs text-base-muted leading-relaxed">
-                Session expires after 8 hours of inactivity
+                Session expires after 10 minutes; auto-logout after 90s inactivity
               </p>
             </div>
           </div>

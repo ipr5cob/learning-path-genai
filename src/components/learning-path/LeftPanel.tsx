@@ -158,39 +158,6 @@ const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPath
         </div>
       </div>
 
-      {/* Path Strategy */}
-      <div>
-        <h2 className="panel-title mb-3">Path Strategy</h2>
-        <div className="panel-card space-y-2">
-          {[
-            { value: 'fastest', label: 'Fastest path', desc: 'Minimum viable coverage' },
-            { value: 'balanced', label: 'Balanced path', desc: 'Recommended coverage' },
-            { value: 'comprehensive', label: 'Comprehensive', desc: 'Full depth coverage' },
-          ].map(({ value, label, desc }) => (
-            <label
-              key={value}
-              className={`flex items-center gap-3 p-2 rounded-md cursor-pointer transition-all ${
-                pathStrategy === value ? 'bg-accent-minor/50' : 'hover:bg-base-major'
-              }`}
-            >
-              <input
-                type="radio"
-                name="strategy"
-                value={value}
-                checked={pathStrategy === value}
-                onChange={() => setPathStrategy(value)}
-                className="h-3.5 w-3.5 accent-accent-major shrink-0"
-              />
-              <div>
-                <span className={`text-xs block ${pathStrategy === value ? 'text-accent-major font-semibold' : 'text-base-text font-medium'}`}>
-                  {label}
-                </span>
-                <span className="text-[10px] text-base-muted">{desc}</span>
-              </div>
-            </label>
-          ))}
-        </div>
-      </div>
     </aside>
   );
 };

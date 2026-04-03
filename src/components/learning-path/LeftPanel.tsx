@@ -9,12 +9,13 @@ import type { SavedPath } from './types';
 
 interface LeftPanelProps {
   savedPaths: SavedPath[];
+  loading?: boolean;
   onDeletePath: (id: string) => void;
   onLoadPath: (id: string) => void;
   onImportPaths: (paths: SavedPath[]) => void;
 }
 
-const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
+const LeftPanel = ({ savedPaths, loading, onDeletePath, onLoadPath, onImportPaths }: LeftPanelProps) => {
   const [maxDuration, setMaxDuration] = useState([20]);
   const [modality, setModality] = useState('Self-paced');
   const [language, setLanguage] = useState('English');

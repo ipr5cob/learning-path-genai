@@ -140,6 +140,7 @@ const Index = () => {
           <ChatPanel messages={messages} setMessages={setMessages} />
         </div>
       </div>
+      <SessionExtendDialog open={showExtendPrompt} onExtend={extendSession} onLogout={logout} />
     </div>
   );
 };

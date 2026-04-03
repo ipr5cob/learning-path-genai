@@ -30,7 +30,7 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
     }
   }, [messages]);
 
-  const streamChat = async (allMessages: Message[]) => {
+  const sendChat = async (allMessages: Message[]) => {
     const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-learning-path`;
     const resp = await fetch(url, {
       method: 'POST',
@@ -46,29 +46,10 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
       throw new Error(err.error || `Error ${resp.status}`);
     }
 
-    if (!resp.body) throw new Error('No response body');
+    const data = await resp.json();
+    const content = data.content || 'No response received.';
 
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let assistantContent = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value, { stream: true });
-      if (chunk) {
-        assistantContent += chunk;
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last?.role === 'assistant') {
-            return prev.map((m, i) =>
-              i === prev.length - 1 ? { ...m, content: assistantContent } : m
-            );
-          }
-          return [...prev, { role: 'assistant', content: assistantContent }];
-        });
-      }
-    }
+    setMessages((prev) => [...prev, { role: 'assistant', content }]);
   };
 
   const handleSend = async (text?: string) => {

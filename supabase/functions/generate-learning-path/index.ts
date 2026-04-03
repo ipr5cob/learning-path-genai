@@ -49,9 +49,17 @@ serve(async (req) => {
       );
     }
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/plain; charset=utf-8" },
-    });
+    // The API returns a JSON object — extract the text content
+    const data = await response.json();
+    console.log("AI pipeline response keys:", Object.keys(data));
+
+    // Try common response field names
+    const content = data.response || data.answer || data.message || data.text || data.content || data.result || JSON.stringify(data);
+
+    return new Response(
+      JSON.stringify({ content }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (e) {
     console.error("chat error:", e);
     return new Response(

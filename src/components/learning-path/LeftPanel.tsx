@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BookOpen, Clock, Trash2, FolderOpen } from 'lucide-react';
+import { BookOpen, Clock, Trash2, FolderOpen, Upload, Download } from 'lucide-react';
 import type { SavedPath } from './types';
 
 interface LeftPanelProps {
   savedPaths: SavedPath[];
   onDeletePath: (id: string) => void;
   onLoadPath: (id: string) => void;
+  onImportPaths: (paths: SavedPath[]) => void;
 }
 
 const LeftPanel = ({ savedPaths, onDeletePath, onLoadPath }: LeftPanelProps) => {

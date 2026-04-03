@@ -80,6 +80,7 @@ const Index = () => {
         <div className="w-[260px] min-w-[240px] border-r border-base-pure">
           <LeftPanel
             savedPaths={savedPaths}
+            loading={loading}
             onDeletePath={deletePath}
             onLoadPath={handleLoadPath}
             onImportPaths={importPaths}

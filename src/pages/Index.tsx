@@ -26,6 +26,7 @@ const persistSaved = (paths: SavedPath[]) => {
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [savedPaths, setSavedPaths] = useState<SavedPath[]>(loadSaved);
+  const { showExtendPrompt, extendSession, logout } = useSessionManager();
 
   const handleSave = useCallback(() => {
     if (messages.length === 0) {

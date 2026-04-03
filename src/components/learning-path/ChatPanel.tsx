@@ -63,7 +63,7 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
     setIsLoading(true);
 
     try {
-      await streamChat(updatedMessages);
+      await sendChat(updatedMessages);
     } catch (e: any) {
       setMessages((prev) => [
         ...prev,

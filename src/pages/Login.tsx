@@ -28,32 +28,38 @@ const Login = () => {
   return (
     <div className="min-h-screen flex bg-base-major">
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-[480px] bg-integrated-deep flex-col justify-between p-10 relative overflow-hidden">
-        {/* Decorative circles */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-accent-major/10" />
-        <div className="absolute bottom-10 -right-16 w-48 h-48 rounded-full bg-emphasis-teal/10" />
-        <div className="absolute top-1/2 left-1/3 w-32 h-32 rounded-full bg-emphasis-purple/8" />
+      <div className="hidden lg:flex lg:w-[480px] relative overflow-hidden">
+        {/* Poster image */}
+        <img
+          src="/ThubV1.1.jpg"
+          alt="T-Hub Learning Path Studio"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-integrated-deep/70" />
 
-        <div>
-          <img src={thubLogo} alt="T-Hub" className="h-10 object-contain brightness-0 invert" />
-        </div>
-
-        <div className="relative z-10 space-y-6">
-          <h2 className="text-3xl font-bold text-contrast-text leading-tight">
-            Learning Path<br />Studio
-          </h2>
-          <p className="text-contrast-muted text-sm leading-relaxed max-w-xs">
-            AI-powered learning path generation for enterprise teams. Design, iterate, and export structured curricula in minutes.
-          </p>
-          <div className="flex items-center gap-3 text-contrast-muted/60 text-xs">
-            <Lock className="h-3.5 w-3.5" />
-            <span>Enterprise-grade security with Microsoft Entra ID</span>
+        <div className="relative z-10 flex flex-col justify-between p-10 w-full">
+          <div>
+            <img src={thubLogo} alt="T-Hub" className="h-10 object-contain brightness-0 invert" />
           </div>
-        </div>
 
-        <p className="text-contrast-muted/40 text-[11px]">
-          © {new Date().getFullYear()} T-Hub Foundation. All rights reserved.
-        </p>
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-contrast-text leading-tight">
+              Learning Path<br />Studio
+            </h2>
+            <p className="text-contrast-muted text-sm leading-relaxed max-w-xs">
+              AI-powered learning path generation for enterprise teams. Design, iterate, and export structured curricula in minutes.
+            </p>
+            <div className="flex items-center gap-3 text-contrast-muted/60 text-xs">
+              <Lock className="h-3.5 w-3.5" />
+              <span>Enterprise-grade security with Microsoft Entra ID</span>
+            </div>
+          </div>
+
+          <p className="text-contrast-muted/40 text-[11px]">
+            © {new Date().getFullYear()} T-Hub Foundation. All rights reserved.
+          </p>
+        </div>
       </div>
 
       {/* Right login panel */}

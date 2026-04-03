@@ -38,9 +38,8 @@ const AuthCallback = () => {
 
         if (fnError) throw fnError;
 
-        // Store user session
+        // Store user session (no access_token needed — OpenID only)
         sessionStorage.setItem('entra_user', JSON.stringify(data.user));
-        sessionStorage.setItem('entra_access_token', data.access_token);
 
         navigate('/app', { replace: true });
       } catch (e) {

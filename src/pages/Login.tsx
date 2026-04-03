@@ -1,5 +1,6 @@
 import { Shield, ArrowRight, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
 import thubLogo from '@/assets/thub-logo.png';
 
 const Login = () => {

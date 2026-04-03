@@ -6,73 +6,22 @@ import LeftPanel from '@/components/learning-path/LeftPanel';
 import ChatPanel from '@/components/learning-path/ChatPanel';
 import SessionExtendDialog from '@/components/learning-path/SessionExtendDialog';
 import { useSessionManager } from '@/hooks/useSessionManager';
-import type { Message, SavedPath } from '@/components/learning-path/types';
-
-const STORAGE_KEY = 'thub-saved-paths';
-
-const loadSaved = (): SavedPath[] => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-};
-
-const persistSaved = (paths: SavedPath[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(paths));
-};
+import { useSavedPaths } from '@/hooks/useSavedPaths';
+import type { Message } from '@/components/learning-path/types';
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [savedPaths, setSavedPaths] = useState<SavedPath[]>(loadSaved);
+  const { savedPaths, savePath, deletePath, loadPath, importPaths } = useSavedPaths();
   const { showExtendPrompt, extendSession, logout } = useSessionManager();
 
   const handleSave = useCallback(() => {
-    if (messages.length === 0) {
-      toast.error('Nothing to save — start a conversation first.');
-      return;
-    }
-    const firstUserMsg = messages.find((m) => m.role === 'user');
-    const title = firstUserMsg?.content.slice(0, 60) || 'Untitled Path';
-    const newPath: SavedPath = {
-      id: crypto.randomUUID(),
-      title,
-      date: new Date().toISOString().split('T')[0],
-      messages: [...messages],
-    };
-    setSavedPaths((prev) => {
-      const updated = [newPath, ...prev];
-      persistSaved(updated);
-      return updated;
-    });
-    toast.success('Learning path saved!');
-  }, [messages]);
-
-  const handleDeletePath = useCallback((id: string) => {
-    setSavedPaths((prev) => {
-      const updated = prev.filter((p) => p.id !== id);
-      persistSaved(updated);
-      return updated;
-    });
-  }, []);
+    savePath(messages);
+  }, [messages, savePath]);
 
   const handleLoadPath = useCallback((id: string) => {
-    const path = savedPaths.find((p) => p.id === id);
-    if (path) {
-      setMessages([...path.messages]);
-    }
-  }, [savedPaths]);
-
-  const handleImportPaths = useCallback((imported: SavedPath[]) => {
-    setSavedPaths((prev) => {
-      const existingIds = new Set(prev.map((p) => p.id));
-      const newPaths = imported.filter((p) => !existingIds.has(p.id));
-      const updated = [...newPaths, ...prev];
-      persistSaved(updated);
-      return updated;
-    });
-  }, []);
+    const loaded = loadPath(id);
+    if (loaded) setMessages(loaded);
+  }, [loadPath]);
 
   const handleExport = useCallback(() => {
     if (messages.length === 0) {
@@ -131,9 +80,9 @@ const Index = () => {
         <div className="w-[260px] min-w-[240px] border-r border-base-pure">
           <LeftPanel
             savedPaths={savedPaths}
-            onDeletePath={handleDeletePath}
+            onDeletePath={deletePath}
             onLoadPath={handleLoadPath}
-            onImportPaths={handleImportPaths}
+            onImportPaths={importPaths}
           />
         </div>
         <div className="flex-1">

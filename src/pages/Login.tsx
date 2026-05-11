@@ -45,7 +45,7 @@ const Login = () => {
 
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-contrast-text leading-tight">
-              Learning Path<br />Studio
+              Learning Path<br />Generator
             </h2>
             <p className="text-contrast-muted text-sm leading-relaxed max-w-xs">
               AI-powered learning path generation for enterprise teams. Design, iterate, and export structured curricula in minutes.
@@ -56,9 +56,6 @@ const Login = () => {
             </div>
           </div>
 
-          <p className="text-contrast-muted/40 text-[11px]">
-            © {new Date().getFullYear()} T-Hub Foundation. All rights reserved.
-          </p>
         </div>
       </div>
 
@@ -123,7 +120,7 @@ const Login = () => {
             <div className="flex items-start gap-2.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emphasis-purple mt-1.5 shrink-0" />
               <p className="text-xs text-base-muted leading-relaxed">
-                Session expires after 10 minutes; auto-logout after 90s inactivity
+                Session expires after 15 minutes; auto-logout after 5 minutes of inactivity
               </p>
             </div>
           </div>

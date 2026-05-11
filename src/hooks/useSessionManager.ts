@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const INACTIVITY_TIMEOUT = 90 * 1000; // 90 seconds
-const SESSION_DURATION = 10 * 60 * 1000; // 10 minutes
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const SESSION_DURATION = 15 * 60 * 1000; // 15 minutes
 const WARNING_BEFORE_EXPIRY = 60 * 1000; // Show warning 60s before session ends
 
 export function useSessionManager() {

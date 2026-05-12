@@ -139,7 +139,15 @@ const ChatPanel = ({ messages, setMessages }: ChatPanelProps) => {
               >
                 {msg.role === 'assistant' ? (
                   <div className="ai-prose">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      components={{
+                        a: ({ node, ...props }) => (
+                          <a {...props} target="_blank" rel="noopener noreferrer" />
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
                   </div>
                 ) : (
                   <p className="text-sm leading-relaxed">{msg.content}</p>
